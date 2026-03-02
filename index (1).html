@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DARKBEATS</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700;800;900&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--black:#000000;--dark:#202020;--navy:#000020;--wine:#200000;--slate:#8080A0;--mid:#404040;--teal:#80A0A0;--warm:#402020}
+html{scroll-behavior:smooth}
+body{background:var(--black);color:var(--slate);font-family:'Barlow',sans-serif;font-weight:300;overflow-x:hidden}
+nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:0 48px;height:52px;border-bottom:1px solid rgba(128,128,160,0.1);background:rgba(0,0,0,0.92);backdrop-filter:blur(16px)}
+.nav-logo{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:18px;letter-spacing:8px;color:var(--teal);text-transform:uppercase}
+.nav-links{display:flex;gap:40px;list-style:none}
+.nav-links a{text-decoration:none;font-family:'Barlow Condensed',sans-serif;font-weight:500;font-size:12px;letter-spacing:4px;color:var(--mid);text-transform:uppercase;transition:color .2s}
+.nav-links a:hover{color:var(--teal)}
+#home{height:100vh;display:flex;flex-direction:column;justify-content:flex-end;padding:0 48px 80px;position:relative;overflow:hidden;border-bottom:1px solid rgba(128,128,160,0.08)}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 80% 40%,rgba(0,0,32,.8) 0%,transparent 70%),radial-gradient(ellipse 40% 60% at 10% 80%,rgba(32,0,0,.6) 0%,transparent 60%)}
+.hero-bg-text{position:absolute;bottom:-40px;right:-20px;font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:clamp(160px,22vw,320px);color:rgba(128,128,160,.03);letter-spacing:-8px;line-height:1;pointer-events:none;user-select:none}
+.hero-tag{font-family:'Barlow Condensed',sans-serif;font-weight:500;font-size:11px;letter-spacing:6px;color:var(--teal);text-transform:uppercase;margin-bottom:24px;opacity:0;animation:fadeUp .8s ease .2s forwards}
+.hero-title{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:clamp(72px,12vw,160px);line-height:.88;letter-spacing:-2px;text-transform:uppercase;color:rgba(128,128,160,.9);opacity:0;animation:fadeUp .8s ease .4s forwards}
+.hero-title .line2{color:rgba(128,160,160,.5);display:block}
+.hero-scroll{margin-top:48px;display:flex;align-items:center;gap:16px;opacity:0;animation:fadeUp .8s ease .8s forwards}
+.hero-scroll-line{width:40px;height:1px;background:var(--mid)}
+.hero-scroll span{font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:4px;color:var(--mid);text-transform:uppercase}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+#beats{padding:100px 48px}
+.section-header{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:60px}
+.section-title{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:clamp(48px,7vw,96px);text-transform:uppercase;color:rgba(128,128,160,.7);letter-spacing:-1px;line-height:1}
+.section-count{font-family:'Barlow Condensed',sans-serif;font-size:13px;letter-spacing:4px;color:var(--mid);text-transform:uppercase}
+.filters{display:flex;align-items:center;margin-bottom:48px;border-bottom:1px solid rgba(128,128,160,.1);flex-wrap:wrap;gap:0}
+.f-btn{background:none;border:none;border-bottom:2px solid transparent;margin-bottom:-1px;color:var(--mid);font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:12px;letter-spacing:3px;text-transform:uppercase;padding:12px 24px 14px;cursor:pointer;transition:all .2s}
+.f-btn:hover{color:var(--slate)}
+.f-btn.active{color:var(--teal);border-bottom-color:var(--teal)}
+.bpm-wrap{margin-left:auto;display:flex;align-items:center;gap:12px;padding:0 4px}
+.bpm-wrap label{font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:3px;color:var(--mid);text-transform:uppercase}
+input[type="range"]{-webkit-appearance:none;width:100px;height:1px;background:var(--dark);outline:none}
+input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:12px;background:var(--teal);cursor:pointer;border-radius:50%}
+.bpm-val{font-family:'Barlow Condensed',sans-serif;font-size:13px;color:var(--teal);min-width:42px;letter-spacing:1px}
+.beat-list{display:flex;flex-direction:column}
+.beat-item{display:grid;grid-template-columns:52px 40px 1fr auto auto auto auto;align-items:center;gap:0 28px;padding:20px 0;border-bottom:1px solid rgba(128,128,160,.07);position:relative}
+.beat-item::after{content:'';position:absolute;left:-48px;right:-48px;top:0;bottom:0;background:rgba(0,0,32,.4);opacity:0;pointer-events:none;transition:opacity .2s}
+.beat-item:hover::after{opacity:1}
+.beat-item.playing::after{background:rgba(0,0,32,.6);opacity:1}
+.beat-idx{font-family:'Barlow Condensed',sans-serif;font-size:13px;letter-spacing:1px;color:var(--mid);text-align:right;position:relative;z-index:1}
+.beat-item.playing .beat-idx{color:var(--teal)}
+.play-circle{width:36px;height:36px;border:1px solid rgba(128,128,160,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--mid);flex-shrink:0;transition:all .2s;position:relative;z-index:1;cursor:pointer;background:none}
+.beat-item:hover .play-circle,.beat-item.playing .play-circle{border-color:var(--teal);color:var(--teal);background:rgba(128,160,160,.06)}
+.beat-meta{position:relative;z-index:1;min-width:0}
+.beat-name{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:18px;letter-spacing:2px;text-transform:uppercase;color:rgba(128,128,160,.8);transition:color .2s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.beat-item:hover .beat-name,.beat-item.playing .beat-name{color:var(--teal)}
+.beat-sub{font-size:11px;letter-spacing:2px;color:var(--mid);margin-top:3px;text-transform:uppercase}
+.wave{display:flex;align-items:center;gap:2px;height:20px;position:relative;z-index:1}
+.wave span{display:block;width:2px;background:var(--mid);border-radius:2px;transition:background .2s}
+.beat-item.playing .wave span{background:var(--teal);animation:wavePulse .5s ease-in-out infinite alternate}
+.beat-item.playing .wave span:nth-child(2){animation-delay:.1s}
+.beat-item.playing .wave span:nth-child(3){animation-delay:.2s}
+.beat-item.playing .wave span:nth-child(4){animation-delay:.05s}
+.beat-item.playing .wave span:nth-child(5){animation-delay:.15s}
+.beat-item.playing .wave span:nth-child(6){animation-delay:.25s}
+.beat-item.playing .wave span:nth-child(7){animation-delay:.08s}
+@keyframes wavePulse{from{transform:scaleY(.25)}to{transform:scaleY(1)}}
+.beat-genre-tag{font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:3px;color:var(--mid);text-transform:uppercase;padding:4px 10px;border:1px solid rgba(128,128,160,.12);white-space:nowrap;position:relative;z-index:1}
+.beat-price-tag{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:22px;letter-spacing:1px;color:rgba(128,128,160,.6);white-space:nowrap;position:relative;z-index:1;min-width:60px;text-align:right}
+.buy-btn{background:none;border:1px solid rgba(128,160,160,.3);color:var(--teal);padding:9px 20px;font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:11px;letter-spacing:3px;text-transform:uppercase;cursor:pointer;transition:all .2s;white-space:nowrap;position:relative;z-index:1;text-decoration:none;display:inline-block}
+.buy-btn:hover{background:var(--teal);color:var(--black);border-color:var(--teal)}
+.no-results{padding:80px 0;text-align:center;font-family:'Barlow Condensed',sans-serif;font-size:14px;letter-spacing:5px;color:var(--mid);text-transform:uppercase}
+.loading{padding:80px 0;text-align:center;font-family:'Barlow Condensed',sans-serif;font-size:12px;letter-spacing:5px;color:var(--mid);text-transform:uppercase}
+.loading::after{content:'';display:inline-block;width:20px;height:1px;background:var(--teal);margin-left:12px;animation:loadPulse 1s ease-in-out infinite alternate;vertical-align:middle}
+@keyframes loadPulse{from{width:10px;opacity:.3}to{width:40px;opacity:1}}
+
+/* PLAYER */
+#player{position:fixed;bottom:0;left:0;right:0;height:72px;background:rgba(0,0,20,.97);border-top:1px solid rgba(128,128,160,.12);display:grid;grid-template-columns:220px 1fr 180px;align-items:center;padding:0 48px;gap:40px;backdrop-filter:blur(20px);transform:translateY(100%);transition:transform .4s cubic-bezier(.16,1,.3,1);z-index:300}
+#player.up{transform:translateY(0)}
+.p-name{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:15px;letter-spacing:3px;color:var(--teal);text-transform:uppercase}
+.p-sub{font-size:11px;letter-spacing:2px;color:var(--mid);margin-top:2px;text-transform:uppercase}
+.p-center{display:flex;flex-direction:column;gap:8px;align-items:center}
+.p-controls{display:flex;align-items:center;gap:24px}
+.p-btn{background:none;border:none;color:var(--mid);font-size:14px;cursor:pointer;transition:color .2s;padding:2px}
+.p-btn:hover{color:var(--slate)}
+.p-play{width:36px;height:36px;border:1px solid rgba(128,160,160,.4);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--teal);font-size:13px;cursor:pointer;background:none;transition:all .2s}
+.p-play:hover{background:var(--teal);color:var(--black);border-color:var(--teal)}
+.p-progress{display:flex;align-items:center;gap:10px;width:100%}
+.p-time{font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:1px;color:var(--mid);min-width:32px}
+.p-bar{flex:1;height:2px;background:rgba(128,128,160,.12);cursor:pointer;position:relative}
+.p-fill{height:100%;background:var(--teal);width:0%;position:relative;transition:width .05s linear}
+.p-fill::after{content:'';position:absolute;right:-4px;top:-3px;width:8px;height:8px;background:var(--teal);border-radius:50%}
+.p-right{display:flex;align-items:center;justify-content:flex-end;gap:12px}
+.p-vol{-webkit-appearance:none;width:80px;height:1px;background:rgba(128,128,160,.15);outline:none}
+.p-vol::-webkit-slider-thumb{-webkit-appearance:none;width:10px;height:10px;background:var(--slate);cursor:pointer;border-radius:50%}
+
+/* SUCCESS BANNER */
+.success-banner{position:fixed;top:60px;left:50%;transform:translateX(-50%);background:rgba(0,0,32,.97);border:1px solid rgba(128,160,160,.4);color:var(--teal);padding:14px 40px;font-family:'Barlow Condensed',sans-serif;font-size:12px;letter-spacing:4px;text-transform:uppercase;z-index:500;display:none}
+.success-banner.show{display:block}
+
+footer{padding:60px 48px 100px;border-top:1px solid rgba(128,128,160,.08);display:flex;justify-content:space-between;align-items:center}
+.footer-logo{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:28px;letter-spacing:8px;color:rgba(128,128,160,.2);text-transform:uppercase}
+.footer-copy{font-size:11px;letter-spacing:2px;color:var(--mid);text-transform:uppercase}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">Darkbeats</div>
+  <ul class="nav-links">
+    <li><a href="#home">Home</a></li>
+    <li><a href="#beats">Beats</a></li>
+  </ul>
+</nav>
+
+<div class="success-banner" id="successBanner">Paiement réussi — Vérifie ton email pour le fichier</div>
+
+<section id="home">
+  <div class="hero-bg"></div>
+  <div class="hero-bg-text">BEATS</div>
+  <div class="hero-tag">Producer — Instrumentales exclusives</div>
+  <h1 class="hero-title">Dark<span class="line2">Beats</span></h1>
+  <div class="hero-scroll"><div class="hero-scroll-line"></div><span>Scroll pour voir les beats</span></div>
+</section>
+
+<section id="beats">
+  <div class="section-header">
+    <h2 class="section-title">Catalogue</h2>
+    <span class="section-count" id="beatCount"></span>
+  </div>
+  <div class="filters" id="filtersBar">
+    <button class="f-btn active" onclick="setGenre('all',this)">Tout</button>
+    <div class="bpm-wrap">
+      <label>BPM max</label>
+      <input type="range" min="60" max="200" value="200" id="bpmRange" oninput="setBPM(this.value)">
+      <span class="bpm-val" id="bpmDisplay">200</span>
+    </div>
+  </div>
+  <div class="beat-list" id="beatList"><div class="loading">Chargement des beats</div></div>
+</section>
+
+<footer>
+  <div class="footer-logo">Darkbeats</div>
+  <div class="footer-copy">2025 — Tous droits réservés</div>
+</footer>
+
+<div id="player">
+  <div class="p-info"><div class="p-name" id="pName">—</div><div class="p-sub" id="pSub">—</div></div>
+  <div class="p-center">
+    <div class="p-controls">
+      <button class="p-btn" onclick="prevTrack()">⏮</button>
+      <button class="p-play" id="pPlayBtn" onclick="togglePlay()">▶</button>
+      <button class="p-btn" onclick="nextTrack()">⏭</button>
+    </div>
+    <div class="p-progress">
+      <span class="p-time" id="pCurrent">0:00</span>
+      <div class="p-bar" id="pBar"><div class="p-fill" id="pFill"></div></div>
+      <span class="p-time" id="pTotal">0:00</span>
+    </div>
+  </div>
+  <div class="p-right">
+    <span style="font-size:12px;color:var(--mid)">🔈</span>
+    <input class="p-vol" type="range" min="0" max="100" value="80" oninput="setVol(this.value)">
+  </div>
+</div>
+
+<script>
+// ── CONFIG ──
+const API_BASE = '/api';
+
+// ── STATE ──
+let allBeats = [], activeGenre = 'all', maxBPM = 200;
+let currentId = null, playing = false;
+let audio = new Audio();
+let genres = [];
+
+// ── INIT ──
+async function init() {
+  // Vérifier succès paiement
+  if (new URLSearchParams(location.search).get('success') === 'true') {
+    document.getElementById('successBanner').classList.add('show');
+    setTimeout(() => document.getElementById('successBanner').classList.remove('show'), 6000);
+    history.replaceState({}, '', '/');
+  }
+
+  await loadBeats();
+}
+
+async function loadBeats() {
+  try {
+    const res = await fetch(`${API_BASE}/get-beats`);
+    const data = await res.json();
+    allBeats = data.beats || [];
+
+    // Construire les filtres de genre dynamiquement
+    genres = [...new Set(allBeats.map(b => b.genre))];
+    buildFilters();
+    render();
+  } catch (e) {
+    document.getElementById('beatList').innerHTML = '<div class="no-results">Erreur de chargement</div>';
+  }
+}
+
+function buildFilters() {
+  const bar = document.getElementById('filtersBar');
+  const bpmWrap = bar.querySelector('.bpm-wrap');
+  // Supprimer les anciens boutons genre sauf "Tout"
+  bar.querySelectorAll('.f-btn:not(:first-child)').forEach(b => b.remove());
+  genres.forEach(g => {
+    const btn = document.createElement('button');
+    btn.className = 'f-btn';
+    btn.textContent = g;
+    btn.onclick = () => setGenre(g, btn);
+    bar.insertBefore(btn, bpmWrap);
+  });
+}
+
+// ── RENDER ──
+function filtered() {
+  return allBeats.filter(b =>
+    (activeGenre === 'all' || b.genre === activeGenre) && b.bpm <= maxBPM
+  );
+}
+
+function render() {
+  const f = filtered();
+  document.getElementById('beatCount').textContent = `${f.length} beat${f.length !== 1 ? 's' : ''}`;
+  const list = document.getElementById('beatList');
+
+  if (!f.length) {
+    list.innerHTML = '<div class="no-results">Aucun beat trouvé</div>';
+    return;
+  }
+
+  list.innerHTML = f.map((b, i) => `
+    <div class="beat-item${currentId === b.id ? ' playing' : ''}">
+      <div class="beat-idx">${String(i + 1).padStart(2, '0')}</div>
+      <button class="play-circle" onclick="playBeat('${b.id}', '${b.audio_url}', '${b.title}', '${b.genre}', ${b.bpm})">
+        ${currentId === b.id && playing ? '⏸' : '▶'}
+      </button>
+      <div class="beat-meta">
+        <div class="beat-name">${b.title}</div>
+        <div class="beat-sub">${b.bpm} BPM</div>
+      </div>
+      <div class="wave">
+        <span style="height:14px"></span><span style="height:9px"></span>
+        <span style="height:18px"></span><span style="height:12px"></span>
+        <span style="height:16px"></span><span style="height:8px"></span>
+        <span style="height:14px"></span>
+      </div>
+      <div class="beat-genre-tag">${b.genre}</div>
+      <div class="beat-price-tag">${b.price}€</div>
+      <a class="buy-btn" href="${b.stripe_payment_link}" target="_blank">Acheter</a>
+    </div>
+  `).join('');
+}
+
+function setGenre(g, btn) {
+  activeGenre = g;
+  document.querySelectorAll('.f-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  render();
+}
+
+function setBPM(v) {
+  maxBPM = +v;
+  document.getElementById('bpmDisplay').textContent = v;
+  render();
+}
+
+// ── PLAYER ──
+function playBeat(id, url, title, genre, bpm) {
+  if (currentId === id) { togglePlay(); return; }
+
+  audio.pause();
+  audio = new Audio(url);
+  audio.volume = document.querySelector('.p-vol').value / 100;
+
+  currentId = id;
+  playing = true;
+
+  document.getElementById('pName').textContent = title;
+  document.getElementById('pSub').textContent = `${bpm} BPM · ${genre}`;
+  document.getElementById('pPlayBtn').textContent = '⏸';
+  document.getElementById('player').classList.add('up');
+
+  audio.play();
+  audio.addEventListener('timeupdate', updateProgress);
+  audio.addEventListener('ended', nextTrack);
+  render();
+}
+
+function togglePlay() {
+  if (!currentId) return;
+  if (playing) { audio.pause(); playing = false; document.getElementById('pPlayBtn').textContent = '▶'; }
+  else { audio.play(); playing = true; document.getElementById('pPlayBtn').textContent = '⏸'; }
+  render();
+}
+
+function updateProgress() {
+  if (!audio.duration) return;
+  const pct = (audio.currentTime / audio.duration) * 100;
+  document.getElementById('pFill').style.width = pct + '%';
+  document.getElementById('pCurrent').textContent = fmt(audio.currentTime);
+  document.getElementById('pTotal').textContent = fmt(audio.duration);
+}
+
+document.getElementById('pBar').addEventListener('click', e => {
+  const r = e.currentTarget.getBoundingClientRect();
+  audio.currentTime = ((e.clientX - r.left) / r.width) * audio.duration;
+});
+
+function setVol(v) { audio.volume = v / 100; }
+
+function prevTrack() {
+  const f = filtered(), i = f.findIndex(b => b.id === currentId);
+  if (i > 0) { const b = f[i-1]; playBeat(b.id, b.audio_url, b.title, b.genre, b.bpm); }
+}
+
+function nextTrack() {
+  const f = filtered(), i = f.findIndex(b => b.id === currentId);
+  if (i < f.length - 1) { const b = f[i+1]; playBeat(b.id, b.audio_url, b.title, b.genre, b.bpm); }
+  else { playing = false; render(); }
+}
+
+function fmt(s) {
+  s = Math.floor(s);
+  return `${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`;
+}
+
+init();
+</script>
+</body>
+</html>
