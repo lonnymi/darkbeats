@@ -5,8 +5,7 @@
     { "source": "/api/get-beats", "destination": "/api/get-beats.js" },
     { "source": "/api/delete-beat", "destination": "/api/delete-beat.js" },
     { "source": "/api/upload-audio", "destination": "/api/upload-audio.js" },
-    { "source": "/admin", "destination": "/admin/index.html" },
-    { "source": "/admin/", "destination": "/admin/index.html" },
+    { "source": "/admin", "destination": "/admin.html" },
     { "source": "/(.*)", "destination": "/public/index.html" }
   ]
 }
