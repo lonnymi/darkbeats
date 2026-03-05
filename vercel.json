@@ -7,12 +7,6 @@
     { "source": "/api/upload-audio", "destination": "/api/upload-audio.js" },
     { "source": "/admin", "destination": "/admin/index.html" },
     { "source": "/admin/", "destination": "/admin/index.html" },
-    { "source": "/", "destination": "/public/index.html" }
-  ],
-  "headers": [
-    {
-      "source": "/admin/(.*)",
-      "headers": [{ "key": "x-robots-tag", "value": "noindex" }]
-    }
+    { "source": "/(.*)", "destination": "/public/index.html" }
   ]
 }
